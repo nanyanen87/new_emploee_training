@@ -1,4 +1,25 @@
 <?php
+
+    $mysqli = new mysqli('localhost', 'sudo_user', 'dadadada', 'test_db');
+    if ($mysqli->connect_error) {
+        echo $mysqli->connect_error;
+        exit();
+    } else {
+        $mysqli->set_charset("utf8");
+    }
+    $sql = "SELECT * FROM test_bord";
+    if ($result = $mysqli->query($sql)) {
+        // 連想配列を取得
+        while ($row = $result->fetch_assoc()) {
+            echo $row["user_name"] . $row["comment"] . "<br>";
+        }
+        // 結果セットを閉じる
+        $result->close();
+    }
+
+
+
+
     $name = $_POST["name"];
     $message = $_POST["message"];
     $row = [
