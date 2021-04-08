@@ -1,4 +1,5 @@
 <?php
+session_start();
 //DB接続
 $mysqli = new mysqli('localhost', 'sudo_user', 'dadadada', 'test_db');
 if ($mysqli->connect_error) {
@@ -26,13 +27,7 @@ if (!empty($_POST["send"])) {
     $user_name = htmlspecialchars($_POST["name"],ENT_QUOTES,"UTF-8");
     $comment = htmlspecialchars($_POST["message"],ENT_QUOTES,"UTF-8");
     $validate_errors = form_validation($_POST["name"],$_POST["message"]);
-    //↓いらない説
-    if (empty ($validate_errors)) {
-        $is_validate_error = false;
-    } else {
-        $is_validate_error = true;
-    }
-    if (!$is_validate_error) {
+    if (empty($validate_errors)) {
         $stmt = $mysqli->prepare("insert into test_bord (user_name, comment, created, modified)"
             ." values( ?,?,now(), now())");
         $stmt->bind_param("ss",$user_name,$comment);
@@ -72,7 +67,6 @@ function form_validation($name,$message)
     <title>testbord</title>
 </head>
 <body>
-    <?php if ($is_validate_error): ?>
     <ul>
         <?php foreach ($validate_errors as $value): ?>
             <li>
@@ -80,7 +74,6 @@ function form_validation($name,$message)
             </li>
         <?php endforeach; ?>
     </ul>
-    <?php endif; ?>
 <div>
     <?php if ($_SESSION["email"]):?>
     <button name="logout" id="logout">ログアウト</button>
@@ -112,11 +105,11 @@ function form_validation($name,$message)
 </div>
 <script type="text/javascript">
     document.getElementById("login").onclick = function () {
-        window.location.href = '/login.php';
+        window.location.href = '/loginPage.php';
     }
 
     document.getElementById("logout").onclick = function () {
-        window.location.href = '/controllers/logout.php';
+        window.location.href = '/controllers/logoutController.php';
         console.log("ok");
     }
 </script>

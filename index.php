@@ -1,6 +1,7 @@
 <?php
-session_start();
-include "bord.php";
+
+require_once "bord.php";
+
 
 
 //login.phpからのPOST
