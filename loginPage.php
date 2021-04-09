@@ -3,7 +3,7 @@
 //バリデーション
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -16,7 +16,7 @@
     <Header />
     <h3>ログイン</h3>
     <div>
-        <form action="/controllers/login.php" method="get">
+        <form action="/controllers/loginController.php" method="post">
             <div>
                 <label for="name">名前</label>
                 <input type="text" id="name" name="name" value="hanaoka">
@@ -30,7 +30,7 @@
     </div>
     <h3>サインイン</h3>
     <div>
-        <form action="/controllers/signin.php" method="post">
+        <form action="/controllers/signinController.php" method="post">
             <div>
                 <label for="name">名前</label>
                 <input type="text" id="name" name="name" value="hanaoka">

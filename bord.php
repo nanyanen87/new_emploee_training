@@ -22,15 +22,16 @@ if ($result = $mysqli->query($sql_get)) {
 //$_SESSION["EMAIL"]があればボタン非表示
 //DBに挿入
 //validationチェック
+$validate_errors = [];
 if (!empty($_POST["send"])) {
     //入力チェック関数
-    $user_name = htmlspecialchars($_POST["name"],ENT_QUOTES,"UTF-8");
-    $comment = htmlspecialchars($_POST["message"],ENT_QUOTES,"UTF-8");
-    $validate_errors = form_validation($_POST["name"],$_POST["message"]);
+    $user_name = htmlspecialchars($_POST["name"], ENT_QUOTES, "UTF-8");
+    $comment = htmlspecialchars($_POST["message"], ENT_QUOTES, "UTF-8");
+    $validate_errors = form_validation($_POST["name"], $_POST["message"]);
     if (empty($validate_errors)) {
         $stmt = $mysqli->prepare("insert into test_bord (user_name, comment, created, modified)"
-            ." values( ?,?,now(), now())");
-        $stmt->bind_param("ss",$user_name,$comment);
+            . " values( ?,?,now(), now())");
+        $stmt->bind_param("ss", $user_name, $comment);
         $res = $stmt->execute();
         $stmt->close();
 
@@ -39,7 +40,7 @@ if (!empty($_POST["send"])) {
 
 }
 
-function form_validation($name,$message)
+function form_validation($name, $message)
 {
     $validate_errors = [];
     if (empty($name)) {
@@ -54,7 +55,9 @@ function form_validation($name,$message)
     if (mb_strlen($message) > 30) {
         $validate_errors[] = "内容は３０字以内で入れてください。";
     }
-    //$_SESSION["EMAIL"]あるかどうか追加
+    if (empty($_SESSION["email"])) {
+        $validate_errors[] = "コメントするにはログインしてください。";
+    }
     return $validate_errors;
 }
 
@@ -67,19 +70,20 @@ function form_validation($name,$message)
     <title>testbord</title>
 </head>
 <body>
-    <ul>
-        <?php foreach ($validate_errors as $value): ?>
-            <li>
-                <?php echo htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+<ul>
+    <?php foreach ($validate_errors as $value): ?>
+        <li>
+            <?php echo htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); ?>
+        </li>
+    <?php endforeach; ?>
+</ul>
 <div>
-    <?php if ($_SESSION["email"]):?>
-    <button name="logout" id="logout">ログアウト</button>
-    <?php  else:?>
-    <button name="login" id="login">ログイン</button>
-    <?php endif;?>
+    <?php if ($_SESSION["email"]): ?>
+        <p><?= $_SESSION["email"] ?></p>
+        <button name="logout" id="logout">ログアウト</button>
+    <?php else:?>
+        <button name="login" id="login">ログイン</button>
+    <?php endif; ?>
 </div>
 <form action="bord.php" method="post">
     <div>
@@ -97,26 +101,32 @@ function form_validation($name,$message)
 <div>
     <tr>
         <?php foreach ($rows as $row) { ?>
-        <td><?= $row["user_name"] ."<br>" ?></td>
-        <td><?= $row["comment"] ."<br>"?></td>
-        <td><?= $row["created"] ."<br>"?></td>
+            <td><?= $row["user_name"] . "<br>" ?></td>
+            <td><?= $row["comment"] . "<br>" ?></td>
+            <td><?= $row["created"] . "<br>" ?></td>
         <?php } ?>
     </tr>
 </div>
 <script type="text/javascript">
-    document.getElementById("login").onclick = function () {
-        window.location.href = '/loginPage.php';
+    //documentById("logout")をnullかどうか判定して、入っていれば実行・
+    if (document.getElementById("logout") != null) {
+        document.getElementById("logout").onclick = function () {
+            window.location.href = '/controllers/logoutController.php';
+        }
+    }
+    if (document.getElementById("login") != null) {
+        document.getElementById("login").onclick = function () {
+            window.location.href = '/loginPage.php';
+        }
     }
 
-    document.getElementById("logout").onclick = function () {
-        window.location.href = '/controllers/logoutController.php';
-        console.log("ok");
-    }
+
+
 </script>
 </body>
 <style>
     ul > li {
-        color:red;
+        color: red;
     }
 </style>
 </html>
