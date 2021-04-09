@@ -13,7 +13,7 @@
 </head>
 <body>
 <div>
-    <Header />
+    <Header/>
     <h3>ログイン</h3>
     <div>
         <form action="/controllers/loginController.php" method="post">

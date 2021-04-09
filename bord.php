@@ -81,7 +81,7 @@ function form_validation($name, $message)
     <?php if ($_SESSION["email"]): ?>
         <p><?= $_SESSION["email"] ?></p>
         <button name="logout" id="logout">ログアウト</button>
-    <?php else:?>
+    <?php else: ?>
         <button name="login" id="login">ログイン</button>
     <?php endif; ?>
 </div>
@@ -108,18 +108,17 @@ function form_validation($name, $message)
     </tr>
 </div>
 <script type="text/javascript">
-    //documentById("logout")をnullかどうか判定して、入っていれば実行・
-    if (document.getElementById("logout") != null) {
-        document.getElementById("logout").onclick = function () {
-            window.location.href = '/controllers/logoutController.php';
-        }
+  //documentById()をnullかどうか判定して、入っていれば実行
+  if (document.getElementById("logout") != null) {
+    document.getElementById("logout").onclick = function () {
+      window.location.href = '/controllers/logoutController.php';
     }
-    if (document.getElementById("login") != null) {
-        document.getElementById("login").onclick = function () {
-            window.location.href = '/loginPage.php';
-        }
+  }
+  if (document.getElementById("login") != null) {
+    document.getElementById("login").onclick = function () {
+      window.location.href = '/loginPage.php';
     }
-
+  }
 
 
 </script>
